@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Register({ onRegister, onGoToLogin }) {
+function Register({ onRegister, onGoToLogin, success }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,6 +32,20 @@ function Register({ onRegister, onGoToLogin }) {
       setLoading(false);
     }
   };
+
+  if (success) {
+    return (
+      <div className="auth-container">
+        <div className="auth-card">
+          <h1>Account Created!</h1>
+          <p>Your account has been created successfully. Please log in to continue.</p>
+          <button className="btn btn-primary" onClick={onGoToLogin}>
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-container">

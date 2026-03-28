@@ -14,6 +14,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState('home');
+  const [registerSuccess, setRegisterSuccess] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -34,9 +35,8 @@ function App() {
 
   const handleRegister = async (name, email, password) => {
     try {
-      const response = await api.post('/register', { name, email, password });
-      setUser(response.data.user);
-      setPage('home');
+      await api.post('/register', { name, email, password });
+      setRegisterSuccess(true);
     } catch (error) {
       throw error.response?.data?.error || 'Registration failed';
     }
@@ -83,7 +83,7 @@ function App() {
         <Login onLogin={handleLogin} onGoToRegister={() => setPage('register')} />
       )}
       {!user && page === 'register' && (
-        <Register onRegister={handleRegister} onGoToLogin={() => setPage('login')} />
+        <Register onRegister={handleRegister} onGoToLogin={() => { setRegisterSuccess(false); setPage('login'); }} success={registerSuccess} />
       )}
     </div>
   );
