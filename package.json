@@ -1,0 +1,22 @@
+{
+  "name": "multi-app-platform",
+  "version": "1.0.0",
+  "description": "MERN stack multi-app platform with cross-subdomain SSO",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install && cd services/auth-service && npm install && cd ../dashboard-service && npm install && cd ../store-service && npm install && cd ../../apps/main-app && npm install && cd ../dashboard-app && npm install && cd ../store-app && npm install",
+    "dev": "concurrently \"npm run dev:auth\" \"npm run dev:dashboard\" \"npm run dev:store\" \"npm run dev:main\" \"npm run dev:dashboard-app\" \"npm run dev:store-app\"",
+    "dev:auth": "cd services/auth-service && npm run dev",
+    "dev:dashboard": "cd services/dashboard-service && npm run dev",
+    "dev:store": "cd services/store-service && npm run dev",
+    "dev:main": "cd apps/main-app && npm run dev",
+    "dev:dashboard-app": "cd apps/dashboard-app && npm run dev",
+    "dev:store-app": "cd apps/store-app && npm run dev",
+    "build": "npm run build:services && npm run build:apps",
+    "build:services": "cd services/auth-service && npm run build && cd ../dashboard-service && npm run build && cd ../store-service && npm run build",
+    "build:apps": "cd apps/main-app && npm run build && cd ../dashboard-app && npm run build && cd ../store-app && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6
+    container_name: multi-app-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: multi-app-platform
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - multi-app-network
+
+  auth-service:
+    build: ./services/auth-service
+    container_name: auth-service
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+      MONGODB_URI: mongodb://mongodb:27017/multi-app-platform
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production-12345
+      JWT_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      COOKIE_DOMAIN: .myplatform.local
+      NODE_ENV: production
+    depends_on:
+      - mongodb
+    networks:
+      - multi-app-network
+    restart: unless-stopped
+
+  dashboard-service:
+    build: ./services/dashboard-service
+    container_name: dashboard-service
+    ports:
+      - "4001:4001"
+    environment:
+      PORT: 4001
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production-12345
+      NODE_ENV: production
+    networks:
+      - multi-app-network
+    restart: unless-stopped
+
+  store-service:
+    build: ./services/store-service
+    container_name: store-service
+    ports:
+      - "4002:4002"
+    environment:
+      PORT: 4002
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production-12345
+      NODE_ENV: production
+    networks:
+      - multi-app-network
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+
+networks:
+  multi-app-network:
+    driver: bridge
